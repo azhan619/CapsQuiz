@@ -1,0 +1,92 @@
+package com.example.caps;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ask();
+    }
+
+    public String question;
+    public String answerInModel;
+    public String answerFromUser;
+    public int score = 0;
+    public int qNum = 1;
+    public Game qa = new Game();
+
+    public void onDone(View v){
+        this.answerFromUser = ((EditText) findViewById(R.id.answer)).getText().toString().toUpperCase();
+        if (answerFromUser.equals(answerInModel.toUpperCase())){
+            //if they get it right score increase
+            this.score++;
+            String tempScore = "Score = " + this.score;
+            ((TextView) findViewById(R.id.score)).setText(tempScore);
+            //set the info to the screen
+            setToScreenFormmatted();
+            //ask a new question
+
+            if (this.qNum > 9){
+                finish();
+            }else{
+                ask();
+            }
+
+        }else {
+            setToScreenFormmatted();
+            if (this.qNum > 9){
+                finish();
+            }else{
+                ask();
+            }
+        }
+        ((EditText) findViewById(R.id.answer)).setText("");
+
+
+
+    }
+    public void setToScreenFormmatted(){
+        String buildMe = "\n" +
+                "Q# " + qNum + ": " + this.question + "\n" +
+                "Your answer: " + this.answerFromUser + "\n" +
+                "Correct answer: " + this.answerInModel + "\n" +
+                ((TextView) findViewById(R.id.finalanswer)).getText().toString();
+        ((TextView) findViewById(R.id.finalanswer)).setText(buildMe);
+        //increase the number by 1
+        this.qNum++;
+        String tempQuestionNum = "Q# " + this.qNum;
+        ((TextView) findViewById(R.id.qNum)).setText(tempQuestionNum);
+
+    }
+
+    public String First(){
+        if ((((TextView) findViewById(R.id.finalanswer)).getText().toString()).equals("")){
+            return "";
+        }
+        else{
+            return "\n";
+        }
+    }
+
+    public void ask(){
+        String rawData = this.qa.qa();
+        this.question = (rawData.split("\n"))[0];
+        this.answerInModel = (rawData.split("\n"))[1];
+        ((TextView) findViewById(R.id.question)).setText(question);
+
+    }
+    public void finish(){
+        (findViewById(R.id.done)).setEnabled(false);
+        String end = "Game Over!";
+        ((TextView) findViewById(R.id.qNum)).setText(end);
+
+    }
+
+}
