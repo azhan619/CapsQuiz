@@ -1,0 +1,36 @@
+package com.example.caps;
+
+import java.util.List;
+import java.util.Map;
+
+import ca.roumani.i2c.Country;
+import ca.roumani.i2c.CountryDB;
+
+public class Game {
+
+    private CountryDB db = new CountryDB();
+
+    public String qa() {
+
+
+
+        String result;
+        List<String> capitals =  db.getCapitals();
+        int n = capitals.size();
+        int index = (int) (Math.random() * n);
+        String c = capitals.get(index);
+        Map<String, Country> data = db.getData();
+        Country ref = data.get(c);
+
+        String country = ref.getName();
+        String capital = ref.getCapital();
+        if (Math.random() < 0.5){
+            result =  "What is the Capital of " + country + "?\n" + capital;
+        }else{
+            result = capital + " is the Capital of?" + "?\n" + country;
+        }
+        return result;
+
+
+    }
+}
